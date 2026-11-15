@@ -1,0 +1,62 @@
+<style>
+    .introTxt {
+        text-align: center;
+    }
+    .wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .mainHeading {
+        font-size: 130px;
+        color: #fff;
+        line-height: 1;
+        margin: 0px;
+    }
+
+    .subHeading {
+        font-size: 32px;
+        color: #fff;
+        line-height: 1;
+        margin: 0px;
+    }
+    .logoBox {
+        width: 300px;
+        height: 300px;
+        margin: 0 auto;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            scale: 1;
+        }
+    }
+</style>
+
+<div class="wrapper">
+    <div class="logoBox">
+        <img src="images/tila.png" alt="Tila">
+    </div>
+    <div class="introTxt">
+        <h1 class="mainHeading jaini-regular">wari</h1>
+        <p class="subHeading mukta-regular">Some journeys, the more memorable ones start with a divine call.</p>
+    </div>
+</div>
+
+<script>
+    gsap.to("img[alt='Tila']", { scale: 1, duration: 2 });
+    gsap.from(".introTxt", { y: 500, duration: 3 , ease: "power4.out" ,delay: 1.5});
+
+    let wrapper = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".wrapper",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+        }
+    })
+    wrapper.to("img[alt='Tila']", { scale: 0.5, duration: 2 });
+</script>

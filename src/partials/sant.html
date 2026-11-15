@@ -1,0 +1,209 @@
+<style>
+    .dehuPopup {
+        --dehu-popup-width: min(86vw, 1280px);
+        --dehu-popup-height: clamp(360px, 68vh, 600px);
+        width: min(86vw, 1280px);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dehuPopup .dehuPopup-container {
+        --dehu-card-width: clamp(240px, 26vw, 400px);
+        --dehu-card-height: var(--dehu-popup-height);
+        display: flex;
+        flex-direction: row;
+        gap: clamp(10px, 1.2vw, 20px);
+        width: max-content;
+        will-change: transform;
+        transform: translateX(25%);
+    }
+
+    .dehuPopup .contentPopupsmall-container,
+    .dehuPopup .contentPopupsmall-container img {
+        position: relative;
+        flex: 0 0 var(--dehu-card-width);
+        width: var(--dehu-card-width);
+        height: var(--dehu-card-height);
+        overflow: hidden;
+        will-change: transform;
+        border-radius: 20px;
+    }
+
+    .contentPopupsmall {
+        background-image: url('../images/bg-3.png');
+        min-height: 130vh;
+        width: 100%;
+        background-size: cover;
+    }
+
+    .contentPopup .gallery .boximg {
+        flex: 1;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 20px;
+        transition: flex 0.5s ease;
+        cursor: pointer;
+    }
+
+    .dehuPopup .contentPopupsmall-container:nth-child(1) {
+        z-index: 4;
+    }
+
+    .dehuPopup .contentPopupsmall-container:nth-child(2) {
+        z-index: 3;
+    }
+
+    .dehuPopup .contentPopupsmall-container:nth-child(3) {
+        z-index: 2;
+    }
+
+    .dehuPopup .contentPopupsmall-container:nth-child(4) {
+        z-index: 1;
+    }
+
+    .contentBox {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 40px;
+
+        h3 {
+            color: #fff;
+            font-size: 42px;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        p {
+            color: #fff;
+            font-size: 18px;
+            line-height: 1.3;
+            margin: 0px;
+        }
+    }
+
+    .content-underSant {
+        min-height: 100vh;
+        width: 100%;
+        position: relative;
+    }
+
+    .content-underSant-content {
+        display: flex;
+        padding: 0 100px;
+        justify-content: space-between;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+        z-index: 10;
+
+        div {
+            width: 20%;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #fff;
+        }
+    }
+
+    .content-underSant-img {
+        position: absolute;
+        top: 0;
+        left: 100px;
+        width: max-content;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+    }
+</style>
+<div class="contentPopupsmall dehuPopup">
+    <div class="dehuPopup-container">
+        <div class="contentPopupsmall-container contentPopupsmall-1">
+            <div class="boxImg">
+                <img src="../images/dehucard.webp" alt="">
+            </div>
+            <div class="contentBox">
+                <h3 class="jaini-regular">Vaikuntha <br>Journey</h3>
+                <p>Tukaram is said to have left for Vaikuntha, abode of Vishnu (identified with Vithoba) at the end of
+                    his
+                    earthly life.</p>
+            </div>
+        </div>
+        <div class="contentPopupsmall-container contentPopupsmall-2">
+            <div class="boxImg">
+                <img src="../images/tukaram.png" alt="Sant Tukaram">
+            </div>
+            <div class="contentBox">
+                <h3 class="jaini-regular">Sant Tukaram</h3>
+                <p>Affectionately known as Tuka, Tukobaraya, or Tukoba, was one of Maharashtra's most revered saints and
+                    a leading figure of the Warkari tradition in the 17th century. Born as Tukaram Bolhoba Ambile at
+                    Dehu, Pune. he dedicated his life to the devotion of Lord Vitthal, expressing his spiritual wisdom
+                    through heartfelt abhangs. His teachings transcended caste and social divisions, emphasizing
+                    equality, love, and unwavering faith—values that continue to guide millions of devotees today.</p>
+            </div>
+        </div>
+        <div class="contentPopupsmall-container contentPopupsmall-3">
+            <div class="boxImg">
+                <img src="../images/tukaram-1.png" alt="Sant Tukaram">
+            </div>
+            <div class="contentBox">
+                <h3 class="jaini-regular">Opposition & <br> Triumph</h3>
+                <p>His progressive teachings infuriated orthodox religious leaders. Brahmin pressured him to drown his
+                    poetry in the river. Tukaram sat in deep meditation for thirteen days, and when he emerged, his
+                    palm-leaf manuscripts were found perfectly intact, floating on the water.</p>
+            </div>
+        </div>
+        <div class="contentPopupsmall-container contentPopupsmall-4">
+            <div class="boxImg">
+                <img src="../images/tukaram-3.png" alt="Sant Tukaram">
+            </div>
+            <div class="contentBox">
+                <h3 class="jaini-regular">Pandharpur Wari</h3>
+                <p> The Pandharpur Wari is an 800-year-old pilgrimage and one of Maharashtra's most cherished spiritual
+                    traditions. The practice of carrying the saints' paduka (sandals) in decorated palanquins was
+                    started in 1685 by Sant Tukaram's youngest son, Narayan Maharaj.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-underSant">
+    <div class="content-underSant-container">
+        <img src="../images/horizontalScrollImg.png" alt="" srcset="" class="content-underSant-img">
+        <div class="content-underSant-content">
+            <div>Tukaram began composing abhangs in the local Marathi language rather than traditional Sanskrit.</div>
+            <div>The historic meeting between Chhatrapati Shivaji Maharaj and Sant Tukaram Maharaj occurred around
+                1649–1650, during the early stages of Shivaji's Swarajya movement.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let dehuPopup = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".dehuPopup",
+            start: "100px 0%",
+            end: "300% 100%",
+            scrub: true,
+            pin: ".contentPopupsmall",
+        }
+    });
+    dehuPopup.fromTo(".contentPopupsmall-2", { x: "-100%", duration: 1, ease: "power1.inOut" }, { x: "10%", duration: 1, ease: "power1.inOut" });
+    dehuPopup.fromTo(".contentPopupsmall-3", { x: "-200%", duration: 1, ease: "power1.inOut" }, { x: "15%", duration: 1, ease: "power1.inOut" });
+    dehuPopup.to(".dehuPopup-container", { x: "-20%", duration: 1, ease: "power1.inOut" });
+    dehuPopup.fromTo(".contentPopupsmall-4", { x: "-300%", duration: 1, ease: "power1.inOut" }, { x: "25%", duration: 1, ease: "power1.inOut" });
+
+
+    let dehuPopup1 = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".content-underSant-container",
+            start: "100px 0%",
+            end: "300% 100%",
+            scrub: true,
+            pin: true,
+            markers: true,
+        }
+    });
+    dehuPopup1.to(".content-underSant-img", { x: "-50%", duration: 1, ease: "power1.inOut" });
+</script>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wari | Houses Of Stories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jaini&family=Mukta:wght@200;300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/DrawSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/Observer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      gsap.registerPlugin(DrawSVGPlugin, Observer, ScrollTrigger, SplitText)
+    });
+  </script>
+  <style>
+    .bg-body {
+      width: 100vw;
+      min-height: 100vh;
+      margin-top: -2px;
+      background: rgba(0, 0, 0);
+      filter: brightness(0.7);
+      position: fixed;
+      z-index: -1;
+
+      img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <div class="bg-body"><img src="./images/black-grunge-texture.jpg" alt="" srcset=""></div>
+  <main class="content">
+    @@include('partials/navbar.html')
+    @@include('partials/circular-slider.html')
+    @@include('partials/sobatiSec.html')
+    @@include('partials/pundalikTxt.html')
+
+    <div class="bg-1">
+      <div class="fadeUp bg-text">
+        Journeys usually start with a destination in mind. But what about those that don’t seek a
+        destination but an eternity. Answering the call of the Lord is a divine pull. And the journeys they invoke are
+        other worldly. They defy the logic of distance and time. They shatter the challenges of dust and doubts. While
+        the faithful walk on. Drenched in faith. Listening to an inner voice. Walking the rough roads. Braving
+        temperamental weather. And wading through the miles.
+      </div>
+    </div>
+    <div class="bg-2">
+      <div class="fadeUp bg-text-1">
+        These journeys are special. They are guided by an invisible hand and visible faith. The mesmerising draw of
+        divinity and spiritual communions keep the tireless travellers going.
+      </div>
+    </div>
+
+    <section class="journeySec">
+      <h3 class="jaini-regular fadeUp">Seeking a blissful eternity</h3>
+      <div class="journeyIntro">
+        <p class="fadeUp">This is one such journey. <br>One that the world calls Wāri.</p>
+      </div>
+    </section>
+
+    <section class="journeySec journeySant bg-3">
+      <img src="images/sant-dnyaneshwar.jpg" alt="Wari" class="fadeUp journeyImg1">
+      <div class="bg-text-1 fadeUp">
+        Devotees walk in disciplined, organized groups called dindis, chanting abhangs (devotional songs) to meet their
+        beloved God, Vitthal. Led by the Palkhis (palanquins) of two of Maharashtra’s greatest saints: Sant Tukaram
+        Maharaj from Dehu and Sant Dnyaneshwar Maharaj from Alandi. These palanquins carry the padukas (sacred sandals)
+        of the saints, symbolizing their presence and blessings.
+      </div>
+      <img src="images/sant-tukaram.jpg" alt="Wari" class="fadeUp journeyImg2">
+    </section>
+    @@include('partials/sant.html')
+    @@include('partials/alandi.html')
+    @@include('partials/ringa.html')
+    @@include('partials/lonkibhar.html')
+    @@include('partials/saswad.html')
+    @@include('partials/yavat.html')
+    @@include('partials/jejuri.html')
+    @@include('partials/lonad.html')
+    @@include('partials/baramati.html')
+    @@include('partials/netepute.html')
+    @@include('partials/indapur.html')
+    @@include('partials/malshirash.html')
+    @@include('partials/vedapur.html')
+    @@include('partials/shegaon.html')
+    @@include('partials/cinematic-scroll.html')
+  </main>
+  <div>
+    <img src="../images/last-image.png" width="100%" alt="" srcset="">
+  </div>
+  <div style="height: 200vh;"></div>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

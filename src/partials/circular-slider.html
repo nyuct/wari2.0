@@ -1,0 +1,206 @@
+<style>
+    .mt-100 {
+        margin-top: 100px;
+    }
+    .slider {
+        background: rgba(0, 0, 0, 0.5);
+        width: 100%;
+        padding: 200px 18px 0px;
+        text-align: center;
+        height: 100vh;
+    }
+
+    .icon-cards {
+        width: min(76vw, 360px);
+        height: min(76vw, 360px);
+        margin: 0 auto;
+        position: relative;
+        perspective: 1200px;
+    }
+
+    .icon-cards__content {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+        transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    .icon-cards__item {
+        width: 70%;
+        aspect-ratio: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #1f2937;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.38);
+        transform: translate(-50%, -50%) rotateY(var(--angle)) translateZ(var(--radius));
+        transition: opacity 300ms ease, filter 300ms ease;
+    }
+
+    .icon-cards__item img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .icon-cards__item:not(.is-active) {
+        filter: saturate(0.72) brightness(0.76);
+        opacity: 0.78;
+    }
+
+    #track-title {
+        min-height: 54px;
+        margin: 28px 0 20px;
+        font-size: 32px;
+        color: #fff;
+        line-height: 1;
+    }
+
+    .slider-controls {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+    }
+
+    .btn-player {
+        width: 58px;
+        height: 58px;
+        border: 0;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: transparent;
+        font-size: 30px;
+        line-height: 1;
+        cursor: pointer;
+        /*box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3);*/
+        transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .btn-player:hover {
+        background: #e5e7eb;
+        transform: translateY(-2px);
+    }
+
+    .btn-player:focus-visible {
+        outline: 3px solid #38bdf8;
+        outline-offset: 4px;
+    }
+
+    @media (max-width: 520px) {
+        .icon-cards {
+            width: min(86vw, 300px);
+            height: min(86vw, 300px);
+        }
+
+        .icon-cards__item {
+            width: 64%;
+        }
+    }
+</style>
+<section class="deatilSec">
+    <div class="wrapper mt-100">
+        <main class="slider" aria-label="Circular image slider">
+            <figure class="icon-cards">
+                <div class="icon-cards__content" id="slider-track"></div>
+            </figure>
+
+            <h1 id="track-title" class="mukta-light">The Strokes</h1>
+
+            <div class="slider-controls">
+                <button class="btn-player btn-prev" type="button" id="prev"
+                    aria-label="Previous image">&#10094;</button>
+                <button class="btn-player btn-next" type="button" id="next" aria-label="Next image">&#10095;</button>
+            </div>
+        </main>
+    </div>
+</section>
+<script>
+    ////////////////////////// Circular Slider Start///////////////////////////////
+    const slides = [
+        {
+            heading: "21 Days",
+            image: "./assets/images/21-days.jpg",
+        },
+        {
+            heading: "258 Kilometers",
+            image: "./assets/images/258-km.jpg",
+        },
+        {
+            heading: "A history of nearly 800 years.",
+            image: "./assets/images/history-800-years.jpg",
+        },
+        {
+            heading: "And the moon for company.",
+            image: "./assets/images/moon-company.jpg",
+        },
+        {
+            heading: "5,00,000 Pilgrims",
+            image: "./assets/images/500000-pilgrims.jpg",
+        }
+    ];
+
+    const track = document.querySelector("#slider-track");
+    const title = document.querySelector("#track-title");
+    const previousButton = document.querySelector("#prev");
+    const nextButton = document.querySelector("#next");
+    const angleStep = 360 / slides.length;
+
+    let currentSlide = 0;
+
+    function createSlides() {
+        slides.forEach((slide, index) => {
+            const item = document.createElement("div");
+            const image = document.createElement("img");
+
+            item.className = "icon-cards__item";
+            item.style.setProperty("--angle", `${index * angleStep}deg`);
+            image.src = slide.image;
+            image.alt = slide.heading;
+
+            item.appendChild(image);
+            track.appendChild(item);
+        });
+    }
+
+    function updateSlider() {
+        const radius = Math.min(window.innerWidth * 0.34, 330);
+        const items = document.querySelectorAll(".icon-cards__item");
+
+        track.style.transform = `rotateY(${-currentSlide * angleStep}deg)`;
+        title.textContent = slides[currentSlide].heading;
+
+        items.forEach((item, index) => {
+            item.style.setProperty("--radius", `${radius}px`);
+            item.classList.toggle("is-active", index === currentSlide);
+        });
+    }
+
+    function moveSlider(direction) {
+        currentSlide = (currentSlide + direction + slides.length) % slides.length;
+        updateSlider();
+    }
+
+    previousButton.addEventListener("click", () => moveSlider(-1));
+    nextButton.addEventListener("click", () => moveSlider(1));
+    window.addEventListener("resize", updateSlider);
+    window.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+            moveSlider(-1);
+        }
+
+        if (event.key === "ArrowRight") {
+            moveSlider(1);
+        }
+    });
+
+    createSlides();
+    updateSlider();
+    ////////////////////////// Circular Slider Ends ///////////////////////////////
+</script>

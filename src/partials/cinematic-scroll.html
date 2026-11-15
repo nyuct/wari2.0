@@ -1,0 +1,659 @@
+<!-- Cinematic Cylinder Carousel (Codrops Demo) Partial -->
+<style>
+  .cinematic-scroll-section {
+    position: relative;
+    width: 100%;
+    min-height: 500vh;
+    background-color: transparent;
+    color: #fff;
+    overflow: clip;
+    z-index: 10;
+  }
+
+  .cinematic-canvas-container {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .cinematic-canvas-container canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .cinematic-text-overlay {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    margin-top: -100vh;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .cinematic-perspective-item {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: none;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .cinematic-pos-top {
+    top: 15vh;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cinematic-pos-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .cinematic-pos-bottom {
+    bottom: 15vh;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cinematic-perspective-title {
+    font-size: clamp(2.2rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin: 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .cinematic-perspective-desc {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-weight: 300;
+    opacity: 0.65;
+    margin-top: 0.75rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+    color: #fff;
+  }
+
+  .cinematic-scroll-indicator {
+    position: sticky;
+    bottom: 2.5rem;
+    left: calc(100vw - 6rem);
+    width: fit-content;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: cinematicBounce 2s infinite ease-in-out;
+  }
+
+  .cinematic-scroll-indicator svg {
+    width: 24px;
+    height: 24px;
+    stroke: rgba(255, 255, 255, 0.7);
+  }
+
+  .cinematic-scroll-indicator span {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @keyframes cinematicBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+</style>
+
+<section class="cinematic-scroll-section" id="cinematicScrollSection">
+  <!-- Sticky WebGL Canvas -->
+  <div class="cinematic-canvas-container" id="cinematicCanvasContainer">
+    <canvas id="cinematicCanvas"></canvas>
+  </div>
+
+  <!-- Sticky Perspectives Text Overlay -->
+  <div class="cinematic-text-overlay" id="cinematicTextOverlay">
+    <div class="cinematic-perspective-item cinematic-pos-top" data-index="0">
+      <h2 class="cinematic-perspective-title">Immersive experiences</h2>
+      <p class="cinematic-perspective-desc">Where creativity comes to life</p>
+    </div>
+
+    <div class="cinematic-perspective-item cinematic-pos-center" data-index="1">
+      <h2 class="cinematic-perspective-title">Infinite Perspective</h2>
+      <p class="cinematic-perspective-desc">Explore new dimensions</p>
+    </div>
+
+    <div class="cinematic-perspective-item cinematic-pos-center" data-index="2">
+      <h2 class="cinematic-perspective-title">Inside the Universe</h2>
+      <p class="cinematic-perspective-desc">Immerse yourself in the extraordinary</p>
+    </div>
+
+    <div class="cinematic-perspective-item cinematic-pos-bottom" data-index="3">
+      <h2 class="cinematic-perspective-title">Cinematic GSAP Scroll Experiences</h2>
+      <p class="cinematic-perspective-desc">Scroll-driven 3D cylinder animation</p>
+    </div>
+  </div>
+
+  <div class="cinematic-scroll-indicator">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+      <path d="M12 5v14M19 12l-7 7-7-7" stroke="currentColor"/>
+    </svg>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- Local bundled OGL library -->
+<script src="js/ogl.js"></script>
+
+<script>
+(function() {
+  function initCinematicScroll() {
+    if (typeof ogl === 'undefined' || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initCinematicScroll, 100);
+      return;
+    }
+
+    const { Renderer, Camera, Transform, Texture, Program, Mesh, Geometry } = ogl;
+
+    const container = document.getElementById('cinematicScrollSection');
+    const canvas = document.getElementById('cinematicCanvas');
+    if (!container || !canvas) return;
+
+    try {
+      if (typeof CustomEase !== 'undefined') {
+        CustomEase.create('cinematicSilk', '0.45, 0.05, 0.55, 0.95');
+        CustomEase.create('cinematicSmooth', '0.25, 0.1, 0.25, 1');
+        CustomEase.create('cinematicFlow', '0.33, 0, 0.2, 1');
+        CustomEase.create('cinematicLinear', '0.4, 0, 0.6, 1');
+      }
+    } catch (e) {}
+
+    const easeSilk = (typeof CustomEase !== 'undefined') ? 'cinematicSilk' : 'power2.inOut';
+    const easeSmooth = (typeof CustomEase !== 'undefined') ? 'cinematicSmooth' : 'power1.out';
+    const easeFlow = (typeof CustomEase !== 'undefined') ? 'cinematicFlow' : 'power1.inOut';
+    const easeLinear = (typeof CustomEase !== 'undefined') ? 'cinematicLinear' : 'none';
+
+    const images = [
+      'images/img1.webp',
+      'images/img2.webp',
+      'images/img3.webp',
+      'images/img4.webp',
+      'images/img5.webp',
+      'images/img6.webp',
+      'images/img7.webp',
+      'images/img8.webp',
+      'images/img9.webp',
+      'images/img10.webp',
+      'images/img11.webp',
+      'images/img12.webp'
+    ];
+
+    const cylinderConfig = {
+      radius: window.innerWidth > 768 ? 2.5 : 2.2,
+      height: window.innerWidth > 768 ? 2 : 1.2,
+      radialSegments: 64,
+      heightSegments: 1,
+    };
+
+    const particleConfig = {
+      numParticles: 12,
+      particleRadius: 3.3,
+      segments: 20,
+      angleSpan: Math.PI / 3,
+    };
+
+    const imageConfig = {
+      width: 1920,
+      height: 1080,
+    };
+
+    function getResponsiveDimensions() {
+      const width = window.innerWidth;
+      const isMobile = width < 768;
+      const isTablet = width >= 768 && width < 1024;
+      const maxRadius = isMobile ? 1.8 : isTablet ? 2.2 : 2.5;
+      const cylinderHeight = isMobile ? 0.8 : isTablet ? 1.0 : 1.2;
+      const cameraZ = isMobile ? 6 : isTablet ? 7 : 8;
+      const fov = isMobile ? 50 : 45;
+
+      return {
+        cylinderScale: maxRadius / cylinderConfig.radius,
+        cylinderHeight,
+        cameraZ,
+        fov,
+        isMobile,
+      };
+    }
+
+    const renderer = new Renderer({
+      canvas: canvas,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      dpr: Math.min(window.devicePixelRatio || 1, 2),
+      alpha: true,
+      antialias: true,
+    });
+    const gl = renderer.gl;
+    gl.clearColor(0, 0, 0, 0);
+    gl.disable(gl.CULL_FACE);
+
+    const dims = getResponsiveDimensions();
+    const camera = new Camera(gl, { fov: dims.fov });
+    camera.position.set(0, 0, dims.cameraZ);
+
+    const scene = new Transform();
+
+    // Helper: Cylinder Geometry
+    function createCylinderGeom(glCtx, cfg) {
+      const { radius, height, radialSegments, heightSegments } = cfg;
+      const positions = [];
+      const uvs = [];
+      const indices = [];
+
+      for (let y = 0; y <= heightSegments; y++) {
+        const v = y / heightSegments;
+        const yPos = (v - 0.5) * height;
+
+        for (let x = 0; x <= radialSegments; x++) {
+          const u = x / radialSegments;
+          const theta = u * Math.PI * 2;
+          const xPos = Math.cos(theta) * radius;
+          const zPos = Math.sin(theta) * radius;
+
+          positions.push(xPos, yPos, zPos);
+          uvs.push(u, 1 - v);
+        }
+      }
+
+      for (let y = 0; y < heightSegments; y++) {
+        for (let x = 0; x < radialSegments; x++) {
+          const a = y * (radialSegments + 1) + x;
+          const b = a + radialSegments + 1;
+          const c = a + 1;
+          const d = b + 1;
+          indices.push(a, b, c);
+          indices.push(b, d, c);
+        }
+      }
+
+      return new Geometry(glCtx, {
+        position: { size: 3, data: new Float32Array(positions) },
+        uv: { size: 2, data: new Float32Array(uvs) },
+        index: { data: new Uint16Array(indices) },
+      });
+    }
+
+    // Helper: Particle Geometry
+    function createParticleGeom(glCtx, cfg, index, cHeight) {
+      const { numParticles, particleRadius, segments, angleSpan } = cfg;
+      const linePositions = [];
+      const startAngle = (index / numParticles) * Math.PI * 2;
+      const isTopHalf = index < numParticles / 2;
+      const yPosition = isTopHalf
+        ? cHeight * 0.7 + Math.random() * cHeight * 0.3
+        : -cHeight * 1.0 + Math.random() * cHeight * 0.3;
+
+      for (let j = 0; j <= segments; j++) {
+        const t = j / segments;
+        const angle = startAngle + angleSpan * t;
+        linePositions.push(
+          Math.cos(angle) * particleRadius,
+          yPosition,
+          Math.sin(angle) * particleRadius
+        );
+      }
+
+      return {
+        geometry: new Geometry(glCtx, {
+          position: { size: 3, data: new Float32Array(linePositions) },
+        }),
+        userData: {
+          baseAngle: startAngle,
+          angleSpan: angleSpan,
+          baseY: yPosition,
+          speed: 0.5 + Math.random() * 1.0,
+          radius: particleRadius,
+        },
+      };
+    }
+
+    function drawImageCover(ctx, img, x, y, w, h) {
+      const imgRatio = (img.naturalWidth || img.width || 1) / (img.naturalHeight || img.height || 1);
+      const canvasRatio = w / h;
+      let sourceX = 0, sourceY = 0;
+      let sourceWidth = img.naturalWidth || img.width;
+      let sourceHeight = img.naturalHeight || img.height;
+
+      if (imgRatio > canvasRatio) {
+        sourceWidth = sourceHeight * canvasRatio;
+        sourceX = ((img.naturalWidth || img.width) - sourceWidth) / 2;
+      } else {
+        sourceHeight = sourceWidth / canvasRatio;
+        sourceY = ((img.naturalHeight || img.height) - sourceHeight) / 2;
+      }
+
+      ctx.save();
+      ctx.translate(x, y + h);
+      ctx.scale(1, -1);
+      ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, w, h);
+      ctx.restore();
+    }
+
+    const cylinderVertex = /* glsl */ `
+      attribute vec2 uv;
+      attribute vec3 position;
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const cylinderFragment = /* glsl */ `
+      precision highp float;
+      uniform sampler2D tMap;
+      uniform float uDarkness;
+      varying vec2 vUv;
+      void main() {
+        vec4 tex = texture2D(tMap, vUv);
+        tex.rgb *= (1.0 - uDarkness);
+        gl_FragColor = tex;
+      }
+    `;
+
+    const particleVertex = /* glsl */ `
+      attribute vec3 position;
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      void main() {
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const particleFragment = /* glsl */ `
+      precision highp float;
+      uniform vec3 uColor;
+      uniform float uOpacity;
+      void main() {
+        gl_FragColor = vec4(uColor, uOpacity);
+      }
+    `;
+
+    const geometry = createCylinderGeom(gl, cylinderConfig);
+    const hardwareLimit = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 2048;
+    const isMobileDevice = window.innerWidth < 768;
+    const safeLimit = isMobileDevice ? 2048 : Math.min(hardwareLimit, 4096);
+
+    const offCanvas = document.createElement('canvas');
+    const offCtx = offCanvas.getContext('2d', { willReadFrequently: false, alpha: false });
+    const numImages = images.length;
+    const totalWidthOriginal = imageConfig.width * numImages;
+    const heightOriginal = imageConfig.height;
+    const scale = Math.min(1, safeLimit / totalWidthOriginal);
+
+    offCanvas.width = Math.floor(totalWidthOriginal * scale);
+    offCanvas.height = Math.floor(heightOriginal * scale);
+
+    const cameraAnim = { x: 0, y: 0, z: dims.cameraZ, rotY: 0 };
+    let cylinderMesh = null;
+    const particles = [];
+    let lastRotation = 0;
+    let velocity = 0;
+    let loadedCount = 0;
+    const imageElements = [];
+
+    images.forEach((src, idx) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        imageElements[idx] = img;
+        loadedCount++;
+        if (loadedCount === numImages) setupScene();
+      };
+      img.onerror = () => {
+        console.warn('Fallback placeholder generated for:', src);
+        // Create colored gradient placeholder canvas if an image fails
+        const placeholder = document.createElement('canvas');
+        placeholder.width = 400;
+        placeholder.height = 300;
+        const pctx = placeholder.getContext('2d');
+        const hue = (idx * 30) % 360;
+        pctx.fillStyle = 'hsl(' + hue + ', 60%, 40%)';
+        pctx.fillRect(0, 0, 400, 300);
+        pctx.fillStyle = '#ffffff';
+        pctx.font = '24px sans-serif';
+        pctx.fillText('Scene ' + (idx + 1), 40, 160);
+        imageElements[idx] = placeholder;
+        loadedCount++;
+        if (loadedCount === numImages) setupScene();
+      };
+      img.src = src;
+    });
+
+    function setupScene() {
+      for (let i = 0; i < numImages; i++) {
+        const img = imageElements[i];
+        const xStart = Math.floor((i / numImages) * offCanvas.width);
+        const xEnd = Math.floor(((i + 1) / numImages) * offCanvas.width);
+        const drawW = xEnd - xStart;
+        if (img) {
+          drawImageCover(offCtx, img, xStart, 0, drawW, offCanvas.height);
+        } else {
+          offCtx.fillStyle = '#222';
+          offCtx.fillRect(xStart, 0, drawW, offCanvas.height);
+        }
+      }
+
+      const texture = new Texture(gl, {
+        wrapS: gl.CLAMP_TO_EDGE,
+        wrapT: gl.CLAMP_TO_EDGE,
+        minFilter: gl.LINEAR,
+        magFilter: gl.LINEAR,
+        generateMipmaps: false,
+      });
+      texture.image = offCanvas;
+      texture.needsUpdate = true;
+
+      const program = new Program(gl, {
+        vertex: cylinderVertex,
+        fragment: cylinderFragment,
+        uniforms: {
+          tMap: { value: texture },
+          uDarkness: { value: 0.15 },
+        },
+        cullFace: null,
+      });
+
+      cylinderMesh = new Mesh(gl, { geometry, program });
+      cylinderMesh.setParent(scene);
+      cylinderMesh.rotation.y = 0.5;
+      cylinderMesh.scale.set(dims.cylinderScale, dims.cylinderScale, dims.cylinderScale);
+
+      // Particles
+      for (let i = 0; i < particleConfig.numParticles; i++) {
+        const { geometry: lineGeom, userData } = createParticleGeom(
+          gl,
+          particleConfig,
+          i,
+          cylinderConfig.height
+        );
+        const lineProg = new Program(gl, {
+          vertex: particleVertex,
+          fragment: particleFragment,
+          uniforms: {
+            uColor: { value: [1.0, 1.0, 1.0] },
+            uOpacity: { value: 0.0 },
+          },
+          transparent: true,
+          depthTest: true,
+        });
+        const pMesh = new Mesh(gl, {
+          geometry: lineGeom,
+          program: lineProg,
+          mode: gl.LINE_STRIP,
+        });
+        pMesh.userData = userData;
+        pMesh.setParent(scene);
+        particles.push(pMesh);
+      }
+
+      // GSAP ScrollTrigger timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+        },
+      });
+
+      tl.to(cameraAnim, {
+        x: 0,
+        y: 0,
+        z: dims.cameraZ,
+        duration: 1,
+        ease: easeSilk,
+      })
+      .to(cameraAnim, {
+        x: 0,
+        y: 5,
+        z: 5,
+        duration: 1,
+        ease: easeFlow,
+      })
+      .to(cameraAnim, {
+        x: 1.5,
+        y: 2,
+        z: 2,
+        duration: 2,
+        ease: easeLinear,
+      })
+      .to(cameraAnim, {
+        x: 0.5,
+        y: 0,
+        z: 0.8,
+        duration: 3.5,
+        ease: 'power1.inOut',
+      })
+      .to(cameraAnim, {
+        x: -6,
+        y: -1,
+        z: dims.cameraZ,
+        duration: 1,
+        ease: easeSmooth,
+      });
+
+      tl.to(
+        cylinderMesh.rotation,
+        {
+          y: '+=28.27',
+          duration: 8.5,
+          ease: 'none',
+        },
+        0
+      );
+
+      // Text animations linked to scroll sections
+      const perspectiveEls = container.querySelectorAll('.cinematic-perspective-item');
+      perspectiveEls.forEach((el, index) => {
+        const count = perspectiveEls.length;
+        const sectionDuration = 100 / count;
+        const start = index * sectionDuration;
+        const end = (index + 1) * sectionDuration;
+
+        const textTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            start: `${start}% top`,
+            end: `${end}% top`,
+            scrub: 0.8,
+          },
+        });
+
+        textTl
+          .fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: easeSmooth })
+          .to(el, { opacity: 1, y: 0, duration: 0.6, ease: 'none' })
+          .to(el, { opacity: 0, y: -30, duration: 0.2, ease: easeSmooth });
+      });
+
+      // Render loop
+      function render() {
+        requestAnimationFrame(render);
+        camera.position.set(cameraAnim.x, cameraAnim.y, cameraAnim.z);
+        camera.lookAt([0, 0, 0]);
+
+        if (cylinderMesh) {
+          const currentRotation = cylinderMesh.rotation.y;
+          velocity = currentRotation - lastRotation;
+          lastRotation = currentRotation;
+
+          const speed = Math.abs(velocity) * 100;
+          const isRotating = Math.abs(velocity) > 0.0001;
+
+          particles.forEach((particle) => {
+            const uData = particle.userData;
+            const targetOpacity = isRotating ? Math.min(speed * 3, 0.95) : 0;
+            const curOpacity = particle.program.uniforms.uOpacity.value;
+            particle.program.uniforms.uOpacity.value = curOpacity + (targetOpacity - curOpacity) * 0.15;
+
+            if (isRotating) {
+              const rotOffset = velocity * uData.speed * 1.5;
+              uData.baseAngle += rotOffset;
+              const segs = particleConfig.segments;
+              const posData = particle.geometry.attributes.position.data;
+
+              for (let j = 0; j <= segs; j++) {
+                const t = j / segs;
+                const angle = uData.baseAngle + uData.angleSpan * t;
+                posData[j * 3] = Math.cos(angle) * uData.radius;
+                posData[j * 3 + 1] = uData.baseY;
+                posData[j * 3 + 2] = Math.sin(angle) * uData.radius;
+              }
+              particle.geometry.attributes.position.needsUpdate = true;
+            }
+          });
+        }
+
+        renderer.render({ scene, camera });
+      }
+
+      render();
+
+      window.addEventListener('resize', () => {
+        const curW = window.innerWidth;
+        const curH = window.innerHeight;
+        const newDims = getResponsiveDimensions();
+
+        renderer.setSize(curW, curH);
+        camera.perspective({ fov: newDims.fov, aspect: curW / curH });
+
+        if (cylinderMesh) {
+          cylinderMesh.scale.set(newDims.cylinderScale, newDims.cylinderScale, newDims.cylinderScale);
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCinematicScroll);
+  } else {
+    initCinematicScroll();
+  }
+})();
+</script>

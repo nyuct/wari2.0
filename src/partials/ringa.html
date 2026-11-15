@@ -1,0 +1,244 @@
+<style>
+    /* ALANDI POPUP */
+    .alandiPopup {
+        margin-top: 100px;
+    }
+
+    .alandiPopup .closePopup {
+        z-index: 5;
+    }
+
+    .alandiPopup .contentBox {
+        z-index: 4;
+        width: min(420px, 34vw);
+        left: 7vw;
+        right: auto;
+        top: 7vh;
+        margin: 0;
+        text-align: left;
+        pointer-events: none;
+    }
+
+    .alandiPopup .contentBox h2 {
+        color: #fff;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.65);
+    }
+
+    .alandiPopup .contentBox p {
+        max-height: 48vh;
+        overflow: hidden;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+    }
+
+    .alandi-ringan-layer {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        /* backdrop-filter: blur(10px); */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alandi-ringan-stage {
+        position: relative;
+        width: min(90vw, 900px);
+        height: min(90vw, 900px);
+        overflow: visible;
+        opacity: 0.98;
+    }
+
+    .alandi-ringan-stage::before,
+    .alandi-ringan-stage::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .alandi-ringan-stage::before {
+        width: min(86vw, 900px);
+        height: min(86vw, 900px);
+    }
+
+    .alandi-ringan-stage::after {
+        width: min(46vw, 470px);
+        height: min(46vw, 470px);
+    }
+
+    .alandi-ringan-ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1px;
+        height: 1px;
+        transform-origin: center;
+        will-change: transform;
+    }
+
+    .alandi-ringan__item,
+    .alandi-ringan__block {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: center;
+        will-change: transform;
+    }
+
+    .alandi-ringan__item {
+        width: clamp(112px, 12vw, 210px);
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: 2px;
+        background: #111;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    }
+
+    .alandi-ringan-ring--inner-images .alandi-ringan__item {
+        width: clamp(54px, 5.8vw, 96px);
+        aspect-ratio: 1 / 1;
+    }
+
+    .alandi-ringan__block {
+        width: clamp(46px, 5.5vw, 92px);
+        aspect-ratio: 1 / 1;
+        background: #000;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.55);
+    }
+
+    .alandi-ringan__item img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+    }
+
+    .alandi-ringan__center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 2;
+        color: #fff;
+        font-size: clamp(24px, 3vw, 48px);
+        line-height: 1;
+        text-shadow: 0 4px 22px rgba(0, 0, 0, 0.9);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    @media (max-width: 800px) {
+        .alandiPopup .contentBox {
+            width: calc(100vw - 48px);
+            left: 24px;
+            top: 72px;
+        }
+
+        .alandiPopup .contentBox p {
+            max-height: 32vh;
+            font-size: 15px;
+        }
+
+        .alandi-ringan-stage {
+            width: 95vw;
+            height: 95vw;
+        }
+    }   
+</style>
+<div class="alandi-ringan-layer alandiRinganPopup alandiPopup" id="alandiRinganPopup">
+    <div class="alandi-ringan-stage">
+        <div class="alandi-ringan-ring alandi-ringan-ring--images">
+            <div class="alandi-ringan__item"><img src="images/alandi-palki.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/sant-dnyaneshwar.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/dnyaneshwar-devanagarim-marathi.jpg" alt="">
+            </div>
+            <div class="alandi-ringan__item"><img src="images/warkari-1.png" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/warkari-2.png" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/generic1.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/generic2.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/history-800-years.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/500000-pilgrims.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/moon-company.jpg" alt=""></div>
+        </div>
+        <div class="alandi-ringan-ring alandi-ringan-ring--inner-images">
+            <div class="alandi-ringan__item"><img src="images/21-days.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/258-km.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/tanpura.webp" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/pundalik-bottom.webp" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/sant-tukaram.jpg" alt=""></div>
+            <div class="alandi-ringan__item"><img src="images/sant-dnyaneshwar.png" alt=""></div>
+        </div>
+        <div class="alandi-ringan__center jaini-regular">Ringan</div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function initAlandiRing() {
+            const stage = document.querySelector(".alandi-ringan-stage");
+            if (!stage) return;
+
+            const rings = Array.from(stage.querySelectorAll(".alandi-ringan-ring"));
+            if (!rings.length) return;
+
+            let rotation = 0;
+            const speed = 0.35;
+            let frameId = null;
+
+            function layoutRing(ring, ringIndex) {
+                const items = Array.from(ring.querySelectorAll(".alandi-ringan__item, .alandi-ringan__block"));
+                const count = items.length;
+                const stageRect = stage.getBoundingClientRect();
+                const viewport = Math.min(stageRect.width || window.innerWidth, stageRect.height || window.innerHeight);
+                let radius = Math.max(120, viewport * 0.44);
+
+                if (ring.classList.contains("alandi-ringan-ring--blocks")) {
+                    radius = Math.max(95, viewport * 0.2);
+                }
+
+                if (ring.classList.contains("alandi-ringan-ring--inner-images")) {
+                    radius = Math.max(135, viewport * 0.22);
+                }
+
+                items.forEach((item, index) => {
+                    const angle = (index / count) * Math.PI * 2;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    const rotate = angle * 180 / Math.PI + (ringIndex * 16);
+
+                    item.style.transform = "translate(-50%, -50%) translate(" + x + "px, " + y + "px) rotate(" + rotate + "deg)";
+                });
+            }
+
+            function layout() {
+                rings.forEach(layoutRing);
+            }
+
+            function render() {
+                rotation += speed;
+
+                rings.forEach((ring, index) => {
+                    const direction = index % 2 === 0 ? 1 : -1;
+                    const multiplier = ring.classList.contains("alandi-ringan-ring--blocks") ? 0.65 : 1;
+                    ring.style.transform = "rotate(" + (rotation * direction * multiplier) + "deg)";
+                });
+
+                frameId = requestAnimationFrame(render);
+            }
+
+            layout();
+            window.addEventListener("resize", layout);
+            render();
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initAlandiRing);
+        } else {
+            initAlandiRing();
+        }
+    })();
+</script>

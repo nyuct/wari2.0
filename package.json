@@ -1,0 +1,19 @@
+{
+  "name": "wari2.0",
+  "version": "1.0.0",
+  "description": "Gulp boilerplate with HTML partials support",
+  "main": "gulpfile.js",
+  "scripts": {
+    "dev": "gulp",
+    "build": "gulp build"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.3",
+    "del": "^6.1.1",
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-file-include": "^2.3.0",
+    "gulp-postcss": "^10.0.0",
+    "gulp-terser": "^2.1.0"
+  }
+}

@@ -1,0 +1,105 @@
+<style>
+    .yavatSec {
+        position: relative;
+        width: 100%;
+        min-height: 120vh;
+        margin-top: 100px;
+        background: url("images/yavat.png") center / contain no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .yavat-card-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .yavat-card {
+        width: 50%;
+        filter: brightness(0.7);
+    }
+
+    .yavat-card-text {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: start;
+        color: #fff;
+        text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75);
+        padding: 20px;
+
+    }
+
+    .marqueeBand {
+        display: grid;
+        grid-template-columns: repeat(20, 1fr);
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+
+        h3 {
+            color: #fff;
+            font-size: 36px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin: 0px;
+        }
+    }
+    .marquee {
+        overflow: hidden;
+        width: 100%;
+        z-index: 9999;
+    }
+</style>
+<div class="yavatSec">
+    <div class="yavat-card-container">
+        <img class="yavat-card" src="../images/yavat-img.png" alt="" srcset="">
+        <div class="yavat-card-text">
+            <h1>Night stay at Yavat</h1>
+            <p>Warkaris walk barefoot, singing bhajan and chanting "Gyanba Tukaram" or "Mauli Mauli" to the beat of
+                drums (dholki) & cymbals (veena). & then the procession stops here for a night stay on its way towards
+                Pandharpur.</p>
+        </div>
+    </div>
+</div>
+<div class="marquee">
+    <div class="marqueeBand">
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+
+        <!-- Duplicate for seamless loop -->
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+        <h3>ग्यानबा तुकाराम</h3>
+    </div>
+</div>
+
+<script>
+    const band = document.querySelector(".marqueeBand");
+
+    gsap.to(band, {
+        xPercent: -50,
+        duration: 10,
+        ease: "none",
+        repeat: -1
+    });
+</script>

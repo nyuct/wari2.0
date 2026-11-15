@@ -1,0 +1,259 @@
+<style>
+    .lonandPopup {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 0;
+        box-sizing: border-box;
+    }
+
+    .lonand-stage {
+        position: relative;
+        width: 100%;
+        height: 85vh;
+        min-height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Center Image: Sant Janabai & Vitthal */
+    .lonand-center-card {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(190px, 20vw, 300px);
+        overflow: hidden;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    .lonand-center-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: contrast(1.05) brightness(0.95);
+    }
+
+    /* Text circle wrapper */
+    .circle__wrapper {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 4;
+        pointer-events: none;
+    }
+
+    .circle__wrapper ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .circle__text__wrapper__left,
+    .circle__text__wrapper__right {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .circle__text__left__item,
+    .circle__text__right__item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #fdbd18;
+        font-family: "Jaini", system-ui, sans-serif;
+        font-size: clamp(20px, 2.2vw, 32px);
+        font-weight: 400;
+        line-height: 1;
+        white-space: nowrap;
+        letter-spacing: 0.5px;
+        text-shadow:
+            0 2px 14px rgba(0, 0, 0, 0.95),
+            0 0 6px rgba(253, 189, 24, 0.3);
+        pointer-events: none;
+        will-change: transform, opacity;
+        transform-origin: center center;
+    }
+
+    .circle__text__right__item {
+        text-align: left;
+    }
+</style>
+
+<div class="contentPopup lonandPopup" id="lonandPopup">
+    <div class="lonand-stage">
+        <!-- Center image of Sant Janabai & Vitthal grinding grains -->
+        <div class="lonand-center-card">
+            <img src="../images/sant-janabai.png" alt="Sant Janabai with Vitthal">
+        </div>
+
+        <div class="circle__wrapper">
+            <ul class="circle__text__wrapper__left">
+                <li class="jaini-regular circle__text__left__item">Sant Pundalik</li>
+                <li class="jaini-regular circle__text__left__item">Sant Dnyaneshwar</li>
+                <li class="jaini-regular circle__text__left__item">Sant Namdev</li>
+                <li class="jaini-regular circle__text__left__item">Sant Eknath</li>
+                <li class="jaini-regular circle__text__left__item">Sant Tukaram</li>
+                <li class="jaini-regular circle__text__left__item">Sant Janabai</li>
+                <li class="jaini-regular circle__text__left__item">Sant Sakhubai</li>
+                <li class="jaini-regular circle__text__left__item">Sant Chokhamela</li>
+                <li class="jaini-regular circle__text__left__item">Sant Savta Mali</li>
+                <li class="jaini-regular circle__text__left__item">Sant Gora Kumbhar</li>
+                <li class="jaini-regular circle__text__left__item">Sant Muktabai</li>
+                <li class="jaini-regular circle__text__left__item">Sant Kanhopatra</li>
+                <li class="jaini-regular circle__text__left__item">Sant Narahari</li>
+            </ul>
+            <ul class="circle__text__wrapper__right">
+                <li class="jaini-regular circle__text__right__item">Bhakti</li>
+                <li class="jaini-regular circle__text__right__item">Prem</li>
+                <li class="jaini-regular circle__text__right__item">Seva</li>
+                <li class="jaini-regular circle__text__right__item">Karuna</li>
+                <li class="jaini-regular circle__text__right__item">Samata</li>
+                <li class="jaini-regular circle__text__right__item">Shraddha</li>
+                <li class="jaini-regular circle__text__right__item">Santosh</li>
+                <li class="jaini-regular circle__text__right__item">Namasmaran</li>
+                <li class="jaini-regular circle__text__right__item">Vairagya</li>
+                <li class="jaini-regular circle__text__right__item">Daya</li>
+                <li class="jaini-regular circle__text__right__item">Satya</li>
+                <li class="jaini-regular circle__text__right__item">Shanti</li>
+                <li class="jaini-regular circle__text__right__item">Anand</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function initLonandScroll() {
+        const popup = document.getElementById("lonandPopup");
+        if (!popup) return;
+
+        const left = {
+            items: popup.querySelectorAll(".circle__text__left__item"),
+            wrapper: popup.querySelector(".circle__text__wrapper__left"),
+            side: "left"
+        };
+        const right = {
+            items: popup.querySelectorAll(".circle__text__right__item"),
+            wrapper: popup.querySelector(".circle__text__wrapper__right"),
+            side: "right"
+        };
+        if (!left.wrapper || !right.wrapper || !left.items.length) return;
+
+        let centerX = 0, centerY = 0;
+        let radius = 500;
+        let rotation = 0;
+
+        function measure() {
+            const stage = popup.querySelector(".lonand-stage") || popup;
+            const r = stage.getBoundingClientRect();
+            centerX = r.width / 2;
+            centerY = r.height / 2;
+            radius = Math.max(420, Math.min(r.height * 0.85, 750));
+        }
+
+        function placeItems(cfg, rotOffset) {
+            const { items, side } = cfg;
+            const total = items.length;
+            const arcSpread = 1.35;
+            const step = arcSpread / (total - 1);
+
+            if (side === "left") {
+                const cardOffset = Math.max(140, Math.min(centerX * 0.32, 230));
+                const apexX = centerX - cardOffset;
+                const cX = apexX - radius;
+                const cY = centerY;
+
+                items.forEach((el, i) => {
+                    const baseAngle = (i - (total - 1) / 2) * step;
+                    const angle = baseAngle + rotOffset;
+                    const x = cX + Math.cos(angle) * radius;
+                    const y = cY + Math.sin(angle) * (radius * 1.02);
+                    const rotDeg = angle * 180 / Math.PI;
+
+                    const dist = Math.abs(angle);
+                    const opacity = Math.max(0, Math.min(1, 1.4 - dist * 1.55));
+
+                    if (typeof gsap !== "undefined") {
+                        gsap.set(el, {
+                            x,
+                            y,
+                            rotation: rotDeg,
+                            opacity,
+                            xPercent: -50,
+                            yPercent: -50,
+                            transformOrigin: "center center"
+                        });
+                    } else {
+                        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${rotDeg}deg)`;
+                        el.style.opacity = opacity;
+                    }
+                });
+            } else {
+                const cardOffset = Math.max(140, Math.min(centerX * 0.32, 230));
+                const apexX = centerX + cardOffset;
+                const cX = apexX + radius;
+                const cY = centerY;
+
+                items.forEach((el, i) => {
+                    const baseAngle = Math.PI - (i - (total - 1) / 2) * step;
+                    const angle = baseAngle - rotOffset;
+                    const x = cX + Math.cos(angle) * radius;
+                    const y = cY + Math.sin(angle) * (radius * 1.02);
+                    const rotDeg = (angle - Math.PI) * 180 / Math.PI;
+
+                    const dist = Math.abs(angle - Math.PI);
+                    const opacity = Math.max(0, Math.min(1, 1.4 - dist * 1.55));
+
+                    if (typeof gsap !== "undefined") {
+                        gsap.set(el, {
+                            x,
+                            y,
+                            rotation: rotDeg,
+                            opacity,
+                            xPercent: -50,
+                            yPercent: -50,
+                            transformOrigin: "center center"
+                        });
+                    } else {
+                        el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${rotDeg}deg)`;
+                        el.style.opacity = opacity;
+                    }
+                });
+            }
+        }
+
+        function updateOnScroll() {
+            const rect = popup.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            // Progress from 0 (approaching) to 1 (passed) as page scrolls normally
+            const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+            const clampedProgress = Math.max(0, Math.min(1, progress));
+            const rotOffset = (clampedProgress - 0.5) * 1.1;
+
+            placeItems(left, rotOffset);
+            placeItems(right, rotOffset);
+        }
+
+        measure();
+        updateOnScroll();
+
+        window.addEventListener("resize", () => {
+            measure();
+            updateOnScroll();
+        });
+
+        window.addEventListener("scroll", updateOnScroll, { passive: true });
+    })();
+</script>

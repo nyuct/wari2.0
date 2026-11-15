@@ -1,0 +1,147 @@
+<style>
+    /* BARAMATI POPUP — horizontal image strips */
+    .baramatiPopup {
+        padding-top: 200px;
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+    }
+
+    .baramatiPopup .closePopup {
+        z-index: 5;
+    }
+
+    .baramati-image-stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .baramati-image-row {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        overflow: visible;
+    }
+
+    .baramati-image-row--top {
+        top: 10vh;
+    }
+
+    .baramati-image-row--bottom {
+        top: 49vh;
+    }
+
+    .baramati-image-track {
+        display: flex;
+        align-items: center;
+        gap: clamp(42px, 5vw, 92px);
+        width: max-content;
+        will-change: transform;
+    }
+
+    .baramati-image-row--top .baramati-image-track {
+        animation: baramatiMoveRight 32s linear infinite;
+    }
+
+    .baramati-image-row--bottom .baramati-image-track {
+        animation: baramatiMoveLeft 32s linear infinite;
+    }
+
+    .baramati-image-track img {
+        display: block;
+        width: clamp(190px, 16vw, 330px);
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        box-shadow: 0 9px 16px rgba(0, 0, 0, 0.55);
+    }
+
+    .baramati-image-copy {
+        position: absolute;
+        left: 50%;
+        top: 36vh;
+        z-index: 2;
+        width: min(760px, 82vw);
+        margin: 0;
+        color: #fff;
+        font-size: clamp(18px, 1.65vw, 32px);
+        line-height: 1.1;
+        text-align: center;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.86);
+        transform: translateX(-50%);
+    }
+
+    @keyframes baramatiMoveRight {
+        from {
+            transform: translateX(-50%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes baramatiMoveLeft {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (max-width: 800px) {
+        .baramati-image-row--top {
+            top: 15vh;
+        }
+
+        .baramati-image-row--bottom {
+            top: 58vh;
+        }
+
+        .baramati-image-copy {
+            top: 42vh;
+        }
+    }
+</style>
+
+<div class="baramatiPopup" id="baramatiPopup">
+    <div class="baramati-image-stage" aria-hidden="true">
+        <div class="baramati-image-row baramati-image-row--top">
+            <div class="baramati-image-track">
+                <img src="../images/alandi-palki.jpg" alt="">
+                <img src="../images/history-800-years.jpg" alt="">
+                <img src="../images/500000-pilgrims.jpg" alt="">
+                <img src="../images/sant-dnyaneshwar.jpg" alt="">
+                <img src="../images/tanpura.webp" alt="">
+                <img src="../images/generic1.jpg" alt="">
+                <img src="../images/alandi-palki.jpg" alt="">
+                <img src="../images/history-800-years.jpg" alt="">
+                <img src="../images/500000-pilgrims.jpg" alt="">
+                <img src="../images/sant-dnyaneshwar.jpg" alt="">
+                <img src="../images/tanpura.webp" alt="">
+                <img src="../images/generic1.jpg" alt="">
+            </div>
+        </div>
+        <p class="baramati-image-copy jaini-regular">A relentless march of human emotions. Where devotion knows no
+            limits.</p>
+        <div class="baramati-image-row baramati-image-row--bottom">
+            <div class="baramati-image-track">
+                <img src="../images/warkari-1.png" alt="">
+                <img src="../images/dnyaneshwar-devanagarim-marathi.jpg" alt="">
+                <img src="../images/sant-tukaram.jpg" alt="">
+                <img src="../images/warkari-2.png" alt="">
+                <img src="../images/generic2.jpg" alt="">
+                <img src="../images/moon-company.jpg" alt="">
+                <img src="../images/warkari-1.png" alt="">
+                <img src="../images/dnyaneshwar-devanagarim-marathi.jpg" alt="">
+                <img src="../images/sant-tukaram.jpg" alt="">
+                <img src="../images/warkari-2.png" alt="">
+                <img src="../images/generic2.jpg" alt="">
+                <img src="../images/moon-company.jpg" alt="">
+            </div>
+        </div>
+    </div>
+</div>

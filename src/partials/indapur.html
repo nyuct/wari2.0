@@ -1,0 +1,92 @@
+<style>
+    .indapurSec {
+        position: relative;
+        width: 100%;
+        min-height: 120vh;
+        margin-top: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+	.mouse-image-trail {
+		position: absolute;
+		z-index: 9999;
+		width: 213px;
+		height: 319px;
+		pointer-events: none;
+		user-select: none;
+		animation: mouse-trail-fade 700ms ease-out forwards;
+	}
+
+	@keyframes mouse-trail-fade {
+		to { opacity: 0; transform: translateY(-18px) rotate(35deg) scale(.35); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.mouse-image-trail { display: none; animation: none; }
+	}
+
+    .indapur-card-text {
+        text-align: start;
+        color: #fff;
+        font-size: 1.5rem;
+        line-height: 1.5;
+        width: 60%;
+        margin-left: auto; 
+    }
+</style>
+
+<section class="indapurSec">
+    <div class="indapur-card-container">
+        <div class="indapur-card-text">
+            <p>When the Pandharpur Wari (the annual pilgrimage of devotees) arrives in the town of Indapur, it culminates into a massive, two-hour spiritual and cultural celebration that transforms the town into a moving temple. Lakhs of Warkaris—dressed in traditional white and carrying holy basil—converge in the area, creating a highly charged, devotional atmosphere.</p>
+        </div>
+    </div>
+
+</section>
+
+<script>
+	(() => {
+		const section = document.querySelector('.indapurSec');
+		if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.__indapurMouseTrail) return;
+		window.__indapurMouseTrail = true;
+
+		const trailImages = Array.from({ length: 5 }, (_, index) => {
+			const image = new Image();
+			image.src = `../images/trail-${index + 1}.png`;
+			return image;
+		});
+		let trailIndex = 0;
+		let lastX = 0;
+		let lastY = 0;
+
+		section.addEventListener('pointermove', (event) => {
+			if (event.pointerType === 'touch') return;
+
+			const rect = section.getBoundingClientRect();
+			const x = event.clientX - rect.left;
+			const y = event.clientY - rect.top;
+
+			if (Math.hypot(x - lastX, y - lastY) < 150) return;
+			lastX = x;
+			lastY = y;
+
+			const trail = document.createElement('img');
+			trail.className = 'mouse-image-trail';
+			trail.src = trailImages[trailIndex % trailImages.length].src;
+			trailIndex += 1;
+			trail.alt = '';
+			trail.setAttribute('aria-hidden', 'true');
+			trail.style.left = `${x - 125}px`;
+			trail.style.top = `${y - 150}px`;
+			section.appendChild(trail);
+			trail.addEventListener('animationend', () => trail.remove(), { once: true });
+		});
+
+		section.addEventListener('pointerleave', () => {
+			lastX = 0;
+			lastY = 0;
+		});
+	})();
+</script>
