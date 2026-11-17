@@ -42,11 +42,34 @@ gsap.utils.toArray(".fadeUp").forEach(el => {
   );
 });
 
+// Text animation for all <p> elements using SplitText
+gsap.utils.toArray(".text-animation").forEach((p) => {
+  // Check if element has text content to animate
+  if (!p.textContent.trim()) return;
+
+  const split = new SplitText(p, { type: "lines,words,chars" });
+
+  gsap.from(split.words, {
+    opacity: 0,
+    y: 20,
+    duration: 0.8,
+    stagger: 0.05,
+    ease: "power2.out",
+    scrollTrigger: {
+      trigger: p,
+      start: "top 100%",
+      end: "top 85%",
+      toggleActions: "play none none reverse",
+      markers: true,
+    },
+  });
+});
+
 gsap.utils.toArray(".section-animation").forEach((el) => {
   gsap.timeline({
     scrollTrigger: {
       trigger: el,
-      start: "top 50%",
+      start: "top 60%",
       end: "bottom 75%",
       scrub: true,
       markers: false
