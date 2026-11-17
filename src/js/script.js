@@ -60,7 +60,7 @@ gsap.utils.toArray(".text-animation").forEach((p) => {
       start: "top 100%",
       end: "top 85%",
       toggleActions: "play none none reverse",
-      markers: true,
+      markers: false,
     },
   });
 });
