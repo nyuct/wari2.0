@@ -8,6 +8,7 @@
     color: #fff;
     overflow: clip;
     z-index: 10;
+    font-family: Jaini-Regular, Jaini;
   }
 
   .cinematic-canvas-container {
@@ -648,6 +649,18 @@
         }
       });
     }
+
+    // Pin map independently
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: ".cinematic-scroll-section",
+            start: "100px 0%",
+            end: "100% 100%",
+            scrub: true,
+            pin: ".map-box",
+            invalidateOnRefresh: true
+        }
+    });
   }
 
   if (document.readyState === 'loading') {

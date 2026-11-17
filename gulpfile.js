@@ -23,6 +23,10 @@ const paths = {
   images: {
     src: 'src/images/**/*',
     dest: 'dist/images/'
+  },
+  audio: {
+    src: 'src/audio/**/*',
+    dest: 'dist/audio/'
   }
 };
 
@@ -64,6 +68,12 @@ function images() {
     .pipe(dest(paths.images.dest));
 }
 
+// Copy Audio
+function audio() {
+  return src(paths.audio.src, { encoding: false, allowEmpty: true })
+    .pipe(dest(paths.audio.dest));
+}
+
 // BrowserSync Local Server & Watcher
 function serve(done) {
   browserSync.init({
@@ -79,11 +89,12 @@ function serve(done) {
   watch(paths.styles.src, styles);
   watch(paths.scripts.src, scripts);
   watch(paths.images.src, images).on('change', browserSync.reload);
+  watch(paths.audio.src, audio).on('change', browserSync.reload);
   done();
 }
 
 // Complex tasks
-const build = series(clean, parallel(html, styles, scripts, images));
+const build = series(clean, parallel(html, styles, scripts, images, audio));
 const dev = series(build, serve);
 
 exports.clean = clean;
@@ -91,5 +102,6 @@ exports.html = html;
 exports.styles = styles;
 exports.scripts = scripts;
 exports.images = images;
+exports.audio = audio;
 exports.build = build;
 exports.default = dev;

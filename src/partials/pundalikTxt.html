@@ -36,7 +36,7 @@
     }
 </style>
 <div class="pundalikIntro">
-    <audio id="bgAudio" src="assets/audio/pundalik-audio.mp3" autoplay muted></audio>
+    <audio id="bgAudio" src="audio/pundalik-audio.mp3" preload="auto"></audio>
     <!-- <div class="warkariImg">
                 <img src="assets/images/warkari-1.png" alt="warkari">
             </div> -->
@@ -51,6 +51,73 @@
     </div>
 </div>
 <script>
+    // Audio autoplay on scroll reach .pundalikIntro / .pundalikTxt
+    (function () {
+        const audio = document.getElementById("bgAudio");
+        const triggerEl = document.querySelector(".pundalikIntro") || document.querySelector(".pundalikTxt");
+        if (!audio || !triggerEl) return;
+
+        let userUnlocked = false;
+        const unlock = () => {
+            userUnlocked = true;
+            window.removeEventListener("pointerdown", unlock);
+            window.removeEventListener("keydown", unlock);
+            window.removeEventListener("touchstart", unlock);
+        };
+        window.addEventListener("pointerdown", unlock, { passive: true });
+        window.addEventListener("keydown", unlock, { passive: true });
+        window.addEventListener("touchstart", unlock, { passive: true });
+
+        function playAudio() {
+            audio.muted = false;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    // If browser blocked unmuted sound due to interaction policy, play muted first then unmute on interaction
+                    audio.muted = true;
+                    audio.play().then(() => {
+                        const unmuteOnce = () => {
+                            audio.muted = false;
+                            window.removeEventListener("scroll", unmuteOnce);
+                            window.removeEventListener("click", unmuteOnce);
+                            window.removeEventListener("touchstart", unmuteOnce);
+                        };
+                        window.addEventListener("scroll", unmuteOnce, { passive: true });
+                        window.addEventListener("click", unmuteOnce, { passive: true });
+                        window.addEventListener("touchstart", unmuteOnce, { passive: true });
+                    }).catch(() => {});
+                });
+            }
+        }
+
+        function pauseAudio() {
+            audio.pause();
+        }
+
+        if (typeof ScrollTrigger !== "undefined") {
+            ScrollTrigger.create({
+                trigger: triggerEl,
+                start: "top 75%",
+                end: "bottom 15%",
+                onEnter: playAudio,
+                onEnterBack: playAudio,
+                onLeave: pauseAudio,
+                onLeaveBack: pauseAudio
+            });
+        } else {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        playAudio();
+                    } else {
+                        pauseAudio();
+                    }
+                });
+            }, { threshold: 0.2 });
+            observer.observe(triggerEl);
+        }
+    })();
+
     // Make container visible
     const container = document.querySelector(".pundalikTxt");
     gsap.set(container, { visibility: "visible" });

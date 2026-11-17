@@ -186,7 +186,9 @@
             if (!rings.length) return;
 
             let rotation = 0;
-            const speed = 0.35;
+            const baseSpeed = 0.35;
+            let scrollBoost = 0;
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
             let frameId = null;
 
             function layoutRing(ring, ringIndex) {
@@ -219,7 +221,11 @@
             }
 
             function render() {
-                rotation += speed;
+                // Decay scrollBoost smoothly back to 0
+                scrollBoost *= 0.92;
+                if (Math.abs(scrollBoost) < 0.001) scrollBoost = 0;
+
+                rotation += baseSpeed + scrollBoost;
 
                 rings.forEach((ring, index) => {
                     const direction = index % 2 === 0 ? 1 : -1;
@@ -229,6 +235,26 @@
 
                 frameId = requestAnimationFrame(render);
             }
+
+            function onScroll() {
+                const currentY = window.pageYOffset || document.documentElement.scrollTop || 0;
+                const deltaY = Math.abs(currentY - lastScrollY);
+                lastScrollY = currentY;
+
+                // Add boost proportional to scroll speed
+                scrollBoost += deltaY * 0.12;
+                // Cap maximum boost to keep animation pleasant
+                if (scrollBoost > 8) scrollBoost = 8;
+            }
+
+            function onWheel(e) {
+                const delta = Math.abs(e.deltaY || e.detail || 0);
+                scrollBoost += delta * 0.05;
+                if (scrollBoost > 8) scrollBoost = 8;
+            }
+
+            window.addEventListener("scroll", onScroll, { passive: true });
+            window.addEventListener("wheel", onWheel, { passive: true });
 
             layout();
             window.addEventListener("resize", layout);

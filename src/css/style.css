@@ -76,3 +76,20 @@ body {
 .journeyImg1 ,.journeyImg2 {
   width: 10%;
 }
+
+.bg-white {
+  background-color: #fff;
+}
+
+.lastBye {
+  background-image: url("../images/lastBg.png");
+  min-height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #000000;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

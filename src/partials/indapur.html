@@ -80,6 +80,7 @@
 			trail.setAttribute('aria-hidden', 'true');
 			trail.style.left = `${x - 125}px`;
 			trail.style.top = `${y - 150}px`;
+			trail.style.zIndex = 9999999999;
 			section.appendChild(trail);
 			trail.addEventListener('animationend', () => trail.remove(), { once: true });
 		});
