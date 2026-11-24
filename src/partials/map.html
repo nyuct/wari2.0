@@ -1,7 +1,19 @@
 <style>
     .map-box {
         position: absolute;
-        /* z-index: 99; */
+        will-change: transform;
+        pointer-events: none;
+    }
+
+    .map-box .cls-2,
+    .map-box .dot {
+        transition: transform 0.3s ease, fill 0.3s ease;
+        transform-origin: center;
+    }
+
+    .map-box .cls-2.active,
+    .map-box .dot.active {
+        fill: #ffdd59;
     }
 </style>
 
@@ -174,143 +186,44 @@
 </div>
 
 <script>
-    gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-    (function () {
-        if (typeof ScrollTrigger === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
-        const path1 = document.getElementById("line1");
-        const path2 = document.getElementById("line2");
-        const dots = document.querySelectorAll(".map-box .cls-2, .map-box .dot");
+    const path = document.querySelector("#line1");
+    const path2 = document.querySelector("#line2");
 
-        if (!path1 || !path2) return;
+    
+    gsap.set(path, {
+        drawSVG: "0%"
+    });
 
-        // Keep all dots cleanly white
-        dots.forEach((d) => { d.style.fill = "#ffffff"; });
+    gsap.to(path, {
+        drawSVG: "100%",
+        ease: "none",
 
-        const len1 = path1.getTotalLength();
-        const len2 = path2.getTotalLength();
-
-        gsap.set(path1, {
-            stroke: "#ffffff",
-            strokeDasharray: len1,
-            strokeDashoffset: len1
-        });
-
-        gsap.set(path2, {
-            stroke: "#ffffff",
-            strokeDasharray: len2,
-            strokeDashoffset: len2
-        });
-
-        // DRAW LINE 1
-        gsap.to(path1, {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".map-box",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true
-            }
-        });
-
-        // DRAW LINE 2
-        gsap.to(path2, {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: {
-                trigger: ".map-box",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true
-            }
-        });
-
-        // MOVE ICONS (if icons exist)
-        if (document.querySelector("#icon1")) {
-            gsap.to("#icon1", {
-                motionPath: {
-                    path: "#line1",
-                    align: "#line1",
-                    alignOrigin: [0.5, 0.5]
-                },
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".map-box",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: true
-                }
-            });
+        scrollTrigger: {
+            trigger: "#line1",
+            start: "top 50%",
+            end: "bottom 80%",
+            scrub: true,
         }
+    });
 
-        if (document.querySelector("#icon2")) {
-            gsap.to("#icon2", {
-                motionPath: {
-                    path: "#line2",
-                    align: "#line2",
-                    alignOrigin: [0.5, 0.5]
-                },
-                ease: "none",
-                scrollTrigger: {
-                    trigger: ".map-box",
-                    start: "top top",
-                    end: "bottom bottom",
-                    scrub: true
-                }
-            });`
+    gsap.set(path2, {
+        drawSVG: "0%"
+    });
+
+    gsap.to(path2, {
+        drawSVG: "100%",
+        ease: "none",
+
+        scrollTrigger: {
+            trigger: '#line2',
+            start: "top 50%",
+            end: "bottom 80%",
+            scrub: true,
+
         }
+    });
 
-        // ===== PERFECT DOT SYNC =====
-        function getProgressOnPath(path, x, y) {
-            const length = path.getTotalLength();
-            let closest = 0;
-            let minDist = Infinity;
-
-            for (let i = 0; i <= length; i += 5) {
-                const pt = path.getPointAtLength(i);
-                const dx = pt.x - x;
-                const dy = pt.y - y;
-                const dist = dx * dx + dy * dy;
-
-                if (dist < minDist) {
-                    minDist = dist;
-                    closest = i;
-                }
-            }
-
-            return closest / length;
-        }
-
-        if (dots.length) {
-            const dotProgress = [];
-
-            dots.forEach((dot) => {
-                const x = parseFloat(dot.getAttribute("cx"));
-                const y = parseFloat(dot.getAttribute("cy"));
-                const line = (dot.dataset && dot.dataset.line == "2") ? path2 : path1;
-                dotProgress.push(getProgressOnPath(line, x, y));
-            });
-
-            // SYNC DOT ACTIVATION ON SCROLL
-            ScrollTrigger.create({
-                trigger: ".map-box",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: true,
-                onUpdate: (self) => {
-                    const progress = self.progress;
-
-                    dots.forEach((dot, i) => {
-                        if (progress >= dotProgress[i] - 0.005) {
-                            dot.classList.add("active");
-                        } else {
-                            dot.classList.remove("active");
-                        }
-                    });
-                }
-            });
-        }
-    })();
 </script>

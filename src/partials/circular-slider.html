@@ -107,31 +107,11 @@
             width: 64%;
         }
     }
-
-    .section2 {
-        position: absolute;
-        /* background-color: orange; */
-        transform: translate(0px, -90vh);
-        height: 100vh;
-        width: 100%;
-        overflow: hidden;
-        z-index: 1;
-
-        #cover {
-            background: #0000004c;
-            transition: background-image 0.8s ease;
-            filter: brightness(0.7);
-            background-size: cover;
-            clip-path: circle(0% at 50% 100%);
-            width: 100%;
-            height: 100%;
-        }
-    }
 </style>
 <section class="deatilSec">
-    <section class="section2">
+    <!-- <section class="section2">
         <div id="cover"></div>
-    </section>
+    </section> -->
     <div class="wrapper mt-100">
         <main class="slider" aria-label="Circular image slider">
             <figure class="icon-cards">
@@ -231,16 +211,4 @@
     updateSlider();
     ////////////////////////// Circular Slider Ends ///////////////////////////////
 
-
-    gsap.to("#cover", {
-        "clip-path": "circle(88% at 50% 100%)",
-        scrollTrigger: {
-            trigger: ".section2",
-            start: "50% center",
-            end: '100% 0%',
-            scrub: true,
-            pin: true,
-            markers: true
-        }
-    });
 </script>
