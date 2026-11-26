@@ -183,10 +183,10 @@
     let dehuPopup = gsap.timeline({
         scrollTrigger: {
             trigger: ".dehuPopup",
-            start: "100px 0%",
-            end: "300% 100%",
+            start: "100px 20%",
+            end: "100% 80%",
             scrub: true,
-            pin: ".contentPopupsmall",
+            // pin: ".contentPopupsmall",
         }
     });
     dehuPopup.fromTo(".contentPopupsmall-2", { x: "-100%", duration: 1, ease: "power1.inOut" }, { x: "10%", duration: 1, ease: "power1.inOut" });
@@ -194,41 +194,41 @@
     dehuPopup.to(".dehuPopup-container", { x: "-20%", duration: 1, ease: "power1.inOut" });
     dehuPopup.fromTo(".contentPopupsmall-4", { x: "-300%", duration: 1, ease: "power1.inOut" }, { x: "25%", duration: 1, ease: "power1.inOut" });
 
-    // Pin map independently
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: ".dehuPopup",
-            start: "100px 0%",
-            end: "300% 100%",
-            scrub: true,
-            pin: ".map-box",
-            invalidateOnRefresh: true
-        }
-    });
+    // // Pin map independently
+    // gsap.timeline({
+    //     scrollTrigger: {
+    //         trigger: ".dehuPopup",
+    //         start: "100px 0%",
+    //         end: "300% 100%",
+    //         scrub: true,
+    //         pin: ".map-box",
+    //         invalidateOnRefresh: true
+    //     }
+    // });
 
 
     
     let dehuPopup1 = gsap.timeline({
         scrollTrigger: {
             trigger: ".content-underSant-container",
-            start: "100px 0%",
-            end: "300% 100%",
+            start: "100px 20%",
+            end: "100% 80%",
             scrub: true,
-            pin: true,
+            // pin: true,
             // markers: true,
         }
     });
     dehuPopup1.to(".content-underSant-img", { x: "-50%", duration: 1, ease: "power1.inOut" });
 
-    // Pin map independently
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: ".content-underSant-container",
-            start: "100px 0%",
-            end: "300% 100%",
-            scrub: true,
-            pin: ".map-box",
-            invalidateOnRefresh: true
-        }
-    });
+    // // Pin map independently
+    // gsap.timeline({
+    //     scrollTrigger: {
+    //         trigger: ".content-underSant-container",
+    //         start: "100px 0%",
+    //         end: "300% 100%",
+    //         scrub: true,
+    //         pin: ".map-box",
+    //         invalidateOnRefresh: true
+    //     }
+    // });
 </script>

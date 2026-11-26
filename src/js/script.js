@@ -121,11 +121,11 @@ let moonTimeline = gsap.timeline({
     scrub: true,
   },
 });
-moonTimeline.fromTo("body", { "--overlay-opacity": 0 } , {"--overlay-opacity" : 0});
+// moonTimeline.fromTo("body", { "--overlay-opacity": 0 } , {"--overlay-opacity" : 0},"a");
 moonTimeline.to(moonContainer, { opacity: 1000 }, "a");
-moonTimeline.fromTo("body", { "--overlay-opacity": 0.8 } , {"--overlay-opacity" : 0}, "a");
-moonTimeline.fromTo("body", { "--overlay-opacity": 0 } , {"--overlay-opacity" : 1}, "b");
-moonTimeline.fromTo("body", { "--overlay-opacity": 0 } , {"--overlay-opacity" : 0});
+moonTimeline.fromTo("body", { "--overlay-opacity": 0.5 } , {"--overlay-opacity" : -0.5}, "a");
+moonTimeline.fromTo("body", { "--overlay-opacity": -0.5 } , {"--overlay-opacity" : 0.5}, "b");
+// moonTimeline.fromTo("body", { "--overlay-opacity": 0 } , {"--overlay-opacity" : 0.5}, "c");
 
 const moon = document.querySelector(".moon");
 const mask = document.querySelector(".mask");
@@ -148,7 +148,7 @@ ScrollTrigger.create({
 
       mask.style.transform = `translateX(${p * 120}%)`;
 
-      moon.style.filter = `brightness(${1 - p})`;
+      // moon.style.filter = `brightness(${1 + p})`;
     } else {
       // 🌑 → 🌒 Waxing
       const p = (progress - 0.5) * 2;
@@ -158,7 +158,7 @@ ScrollTrigger.create({
 
       mask.style.transform = `translateX(${(1 - p) * -120}%)`;
 
-      moon.style.filter = `brightness(${p})`;
+      // moon.style.filter = `brightness(${p})`;
     }
   },
 });
